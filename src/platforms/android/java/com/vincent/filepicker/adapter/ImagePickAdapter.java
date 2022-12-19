@@ -163,6 +163,7 @@ public class ImagePickAdapter extends BaseAdapter<ImageFile, ImagePickAdapter.Im
                         intent.putExtra(Constant.MAX_NUMBER, mMaxNumber);
                         intent.putExtra(IMAGE_BROWSER_INIT_INDEX,
                                 isNeedCamera ? holder.getAdapterPosition() - 1 : holder.getAdapterPosition());
+                        intent.putExtra("currentDir", ((ImagePickActivity) mContext).currentDir);
                         intent.putParcelableArrayListExtra(IMAGE_BROWSER_SELECTED_LIST, ((ImagePickActivity) mContext).mSelectedList);
                         ((Activity) mContext).startActivityForResult(intent, Constant.REQUEST_CODE_BROWSER_IMAGE);
                     }

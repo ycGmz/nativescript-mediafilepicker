@@ -47,7 +47,9 @@ public class ImagePickActivity extends BaseActivity {
     private boolean isNeedImagePager;
     private boolean isTakenAutoSelected;
     public ArrayList<ImageFile> mSelectedList = new ArrayList<>();
+    public String currentDir = "all";
     private List<Directory<ImageFile>> mAll;
+    private boolean isFirstLoad = true;
 
     private TextView tv_count;
     private TextView tv_folder;
@@ -126,10 +128,11 @@ public class ImagePickActivity extends BaseActivity {
                 public void onFolderListClick(Directory directory) {
                     mFolderHelper.toggle(tb_pick);
                     tv_folder.setText(directory.getName());
-
                     if (TextUtils.isEmpty(directory.getPath())) { //All
                         refreshData(mAll);
+                        currentDir = "all";
                     } else {
+                        currentDir = directory.getPath();
                         for (Directory<ImageFile> dir : mAll) {
                             if (dir.getPath().equals(directory.getPath())) {
                                 List<Directory<ImageFile>> list = new ArrayList<>();
@@ -199,7 +202,12 @@ public class ImagePickActivity extends BaseActivity {
                 }
 
                 mAll = directories;
-                refreshData(directories);
+                
+                if (isFirstLoad)
+                {
+                    isFirstLoad = false;
+                    refreshData(directories);
+                }
             }
         });
     }

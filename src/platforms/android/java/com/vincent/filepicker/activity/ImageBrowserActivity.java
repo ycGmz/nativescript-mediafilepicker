@@ -41,6 +41,7 @@ public class ImageBrowserActivity extends BaseActivity {
     private int mCurrentNumber = 0;
     private int initIndex = 0;
     private int mCurrentIndex = 0;
+    private String currentDir;
 
     private ViewPager mViewPager;
     private Toolbar mTbImagePick;
@@ -62,8 +63,7 @@ public class ImageBrowserActivity extends BaseActivity {
         mCurrentIndex = initIndex;
         mSelectedFiles = getIntent().getParcelableArrayListExtra(IMAGE_BROWSER_SELECTED_LIST);
         mCurrentNumber = mSelectedFiles.size();
-
-
+        currentDir = getIntent().getStringExtra("currentDir");
         super.onCreate(savedInstanceState);
     }
 
@@ -133,8 +133,16 @@ public class ImageBrowserActivity extends BaseActivity {
             @Override
             public void onResult(List<Directory<ImageFile>> directories) {
                 mList.clear();
-                for (Directory<ImageFile> directory : directories) {
-                    mList.addAll(directory.getFiles());
+               for (Directory<ImageFile> directory : directories) {
+                    if (currentDir.equals("all"))
+                    {
+                        mList.addAll(directory.getFiles());
+                    }
+                    else if (directory.getPath().equals(currentDir))
+                    {
+                        mList.addAll(directory.getFiles());
+                        break;
+                    }
                 }
 
                 for (ImageFile file : mList) {
@@ -142,9 +150,11 @@ public class ImageBrowserActivity extends BaseActivity {
                         file.setSelected(true);
                     }
                 }
-
-                initView();
-                mViewPager.getAdapter().notifyDataSetChanged();
+                if (mList.size() > 0)
+                {
+                    initView();
+                    mViewPager.getAdapter().notifyDataSetChanged();
+                }
             }
         });
     }
